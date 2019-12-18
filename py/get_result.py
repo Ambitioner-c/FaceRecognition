@@ -44,18 +44,17 @@ def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
     process_this_frame = True
 
     # 调用摄像头来识别人脸
-    video_capture = cv2.VideoCapture(0)
+    # video_capture = cv2.VideoCapture(0)
 
     # 获取目标图片
-    # picture = cv2.imread(picture)
+    picture = cv2.imread(picture)
 
     while True:
+        # 抓取一帧视频
+        # ret, frame = video_capture.read()
 
         # 将图片设置为一帧
-        # frame = picture
-
-        # 抓取一帧视频
-        ret, frame = video_capture.read()
+        frame = picture
 
         # 将视频帧的大小调整为1/4以加快人脸识别处理
         # frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -122,7 +121,7 @@ def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
                 name_list.append(k)
 
     # 释放摄像头
-    video_capture.release()
+    # video_capture.release()
     cv2.destroyAllWindows()
 
     return name_list
