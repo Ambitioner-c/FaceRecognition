@@ -1,6 +1,6 @@
 # _*_ coding : UTF-8 _*_
 # author : cfl
-# time   : 2019/12/18 下午5:04
+# time   : 2019/12/18 下午7:23
 import face_recognition
 import cv2
 import numpy as np
