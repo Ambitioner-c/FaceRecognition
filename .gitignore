@@ -1,0 +1,10 @@
+/target/
+
+*.npy
+*.jpg
+*.jpeg
+*.png
+
+model/*
+sample/*
+test/*
