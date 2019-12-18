@@ -50,6 +50,7 @@ def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
     # picture = cv2.imread(picture)
 
     while True:
+
         # 将图片设置为一帧
         # frame = picture
 
@@ -72,7 +73,6 @@ def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
             for k in face_encodings:
                 # 设置默认名
                 name = "Unknown"
-
                 # 查看该人脸是否与已知人脸匹配
                 matches = face_recognition.compare_faces(face_encodings_known_ndarray, k)
 
