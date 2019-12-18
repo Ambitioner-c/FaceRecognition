@@ -1,6 +1,6 @@
 # _*_ coding : UTF-8 _*_
 # author : cfl
-# time   : 2019/12/18 下午4:42
+# time   : 2019/12/18 下午6:31
 import face_recognition
 import os
 import re
@@ -8,6 +8,11 @@ import numpy as np
 
 
 def set_model(path):
+    """
+    读取样板地址下的图片文件，从而获取模型并保存
+    @param path: 项目根目录
+    @return:
+    """
     # 样板地址
     path_sample = path + 'sample/'
     # 模型地址
