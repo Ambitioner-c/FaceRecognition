@@ -26,7 +26,7 @@ def get_model(path):
     return face_encodings_known_ndarray, face_names_known_ndarray
 
 
-def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
+def get_result(face_encodings_known_ndarray, face_names_known_ndarray, picture=None):
     """
     通过人脸识别算法，获取识别到的人脸，返回人名
     @param picture: 被识别图片路径
@@ -37,24 +37,24 @@ def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
     # 识别到的名字列表
     name_list = []
 
-    # 人脸位置列表
-    face_locations = []
+    # 识别到的人脸
+    face_names = []
 
     # 该视频帧状态
     process_this_frame = True
 
     # 调用摄像头来识别人脸
-    # video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture(0)
 
     # 获取目标图片
-    picture = cv2.imread(picture)
+    # picture = cv2.imread(picture)
 
     while True:
         # 抓取一帧视频
-        # ret, frame = video_capture.read()
+        ret, frame = video_capture.read()
 
         # 将图片设置为一帧
-        frame = picture
+        # frame = picture
 
         # 将视频帧的大小调整为1/4以加快人脸识别处理
         # frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -68,7 +68,6 @@ def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
             face_locations = face_recognition.face_locations(rgb_small_frame)
             face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
 
-            face_names = []
             for k in face_encodings:
                 # 设置默认名
                 name = "Unknown"
@@ -121,7 +120,7 @@ def get_result(picture, face_encodings_known_ndarray, face_names_known_ndarray):
                 name_list.append(k)
 
     # 释放摄像头
-    # video_capture.release()
+    video_capture.release()
     cv2.destroyAllWindows()
 
     return name_list
@@ -134,17 +133,21 @@ if __name__ == '__main__':
     # 获取sample
     my_known_encodings, my_known_names = get_model(my_path)
 
-    # 全部人脸
-    my_names_list_i = []
-    # 识别文件夹中所有图片
-    dir_list = os.listdir(my_path + "test")
-    for i in dir_list:
-        my_name = re.findall(r'(\w+)\.', i)[0]
-        my_picture = my_path + "test/" + i
-        my_name_list = get_result(my_picture, my_known_encodings, my_known_names)
+    # # 全部人脸
+    # my_names_list_i = []
+    #
+    # # 识别文件夹中所有图片
+    # dir_list = os.listdir(my_path + "test")
+    # for i in dir_list:
+    #     my_name = re.findall(r'(\w+)\.', i)[0]
+    #     my_picture = my_path + "test/" + i
+    #     my_name_list = get_result(my_known_encodings, my_known_names, my_picture)
+    #
+    #     my_names_list_j = []
+    #     for j in my_name_list:
+    #         my_names_list_j.append(j)
+    #     my_names_list_i.append(my_names_list_j)
+    # print(my_names_list_i)
 
-        my_names_list_j = []
-        for j in my_name_list:
-            my_names_list_j.append(j)
-        my_names_list_i.append(my_names_list_j)
-    print(my_names_list_i)
+    my_name_list = get_result(my_known_encodings, my_known_names)
+    print(my_name_list)
