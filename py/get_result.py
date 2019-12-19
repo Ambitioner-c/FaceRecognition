@@ -59,42 +59,44 @@ def get_result(face_encodings_known_ndarray, face_names_known_ndarray, picture=N
         # frame = picture
 
         # 将视频帧的大小调整为1/4以加快人脸识别处理
-        # frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
         # 将图像从BGR颜色（OpenCV使用）转换为RGB颜色（人脸识别使用）
-        rgb_small_frame = frame[:, :, ::-1]
+        rgb_small_frame = small_frame[:, :, ::-1]
 
         # 仅每隔一帧处理一次视频以节省时间
         # 查找当前视频帧中的所有人脸位置和人脸编码
         face_locations = face_recognition.face_locations(rgb_small_frame)
         face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
 
-        for k in face_encodings:
-            # 设置默认名
-            name = "Unknown"
-            # 查看该人脸是否与已知人脸匹配
-            matches = face_recognition.compare_faces(face_encodings_known_ndarray, k)
+        if process_this_frame:
+            for k in face_encodings:
+                # 设置默认名
+                name = "Unknown"
+                # 查看该人脸是否与已知人脸匹配
+                matches = face_recognition.compare_faces(face_encodings_known_ndarray, k)
 
-            # 如果在已知的面编码中找到匹配项，请使用第一个
-            # if True in matches:
-            #     first_match_index = matches.index(True)
-            #     name = known_face_names[first_match_index]
+                # 如果在已知的面编码中找到匹配项，请使用第一个
+                # if True in matches:
+                #     first_match_index = matches.index(True)
+                #     name = known_face_names[first_match_index]
 
-            # 或者，使用与新人脸的距离最小的已知人脸
-            face_distances = face_recognition.face_distance(face_encodings_known_ndarray, k)
-            best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
-                name = face_names_known_ndarray[best_match_index]
+                # 或者，使用与新人脸的距离最小的已知人脸
+                face_distances = face_recognition.face_distance(face_encodings_known_ndarray, k)
+                best_match_index = np.argmin(face_distances)
+                if matches[best_match_index]:
+                    name = face_names_known_ndarray[best_match_index]
 
-            face_names.append(name)
+                face_names.append(name)
+        process_this_frame = not process_this_frame
 
         # 展示结果
         for (top, right, bottom, left), name in zip(face_locations, face_names):
             # 由于我们在检测过程中帧被缩放到1/4大小，因此放大备份面位置
-            # top *= 4
-            # right *= 4
-            # bottom *= 4
-            # left *= 4
+            top *= 4
+            right *= 4
+            bottom *= 4
+            left *= 4
 
             # 在脸上画一个方框
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
@@ -105,7 +107,7 @@ def get_result(face_encodings_known_ndarray, face_names_known_ndarray, picture=N
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
         # 显示结果图像
-        # cv2.namedWindow('Picture', 0)
+        cv2.namedWindow('Picture', 0)
         cv2.imshow('Picture', frame)
 
         # 按键盘上的“q”键退出
